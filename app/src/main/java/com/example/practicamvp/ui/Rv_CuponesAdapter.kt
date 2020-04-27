@@ -5,27 +5,34 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.startActivity
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.recyclerview.widget.RecyclerView
+import com.example.practicamvp.BR
 import com.example.practicamvp.R
-import com.example.practicamvp.model.Offer
+import com.example.practicamvp.model.obj.Offer
+import com.example.practicamvp.viewmodel.MainViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.item.view.*
 
-class Rv_CuponesAdapter(var context: Context, cuponList: ArrayList<Offer>): RecyclerView.Adapter<Rv_CuponesAdapter.ViewHolder>() {
+class Rv_CuponesAdapter(var mainViewModel: MainViewModel): RecyclerView.Adapter<Rv_CuponesAdapter.ViewHolder>() {
 
     private var cuponList = ArrayList<Offer>()
 
-    init{
-        this.cuponList = cuponList
+
+
+    fun setCuponsList(cupons:List<Offer>){
+        this.cuponList=cupons  as ArrayList<Offer>
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val itemView = LayoutInflater.from(context)
-            .inflate(R.layout.item, parent, false)
+        val layoutInflater = LayoutInflater.from(parent.context)
 
-        val viewHolder = Rv_CuponesAdapter.ViewHolder(itemView, context)
-        return viewHolder
+        val binding: ViewDataBinding =
+            DataBindingUtil.inflate(layoutInflater, viewType, parent, false)
+
+
+        return ViewHolder(binding)
     }
 
     override fun getItemCount(): Int {
@@ -33,43 +40,31 @@ class Rv_CuponesAdapter(var context: Context, cuponList: ArrayList<Offer>): Recy
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = cuponList.get(position)
+        holder.setCupon(mainViewModel,position)
+    }
 
-        holder.bindCupon(item)
+    override fun getItemViewType(position: Int): Int {
+        return getLayoutIdForPosition(position)
+    }
+
+    private fun getLayoutIdForPosition(position: Int): Int {
+        return R.layout.item
     }
 
 
-    class ViewHolder(itemView: View, context: Context) : RecyclerView.ViewHolder(itemView),
-        View.OnClickListener {
 
-        private var offer: Offer ?= null
+    class ViewHolder(binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root){
+
+        private var binding: ViewDataBinding? = null
 
         init {
-            itemView.setOnClickListener(this)
+            this.binding = binding
         }
 
 
-
-        fun bindCupon(offer: Offer) {
-            this.offer = offer
-            itemView.tv_offer.text = offer.offer
-            itemView.tv_offertext.text =offer.offerText
-            itemView.tv_offervalue.text = offer.offerValue
-            if(offer.imageUrl.isNotEmpty())
-                Picasso.get().load(offer.imageUrl).into(itemView.iv_logo)
-            else
-                Picasso.get().load(R.mipmap.logo).into(itemView.iv_logo)
-
-            itemView.tv_store.text = offer.store
-
-        }
-
-
-        override fun onClick(v: View?) {
-
-            val intent = Intent (itemView.context, DetailActivity::class.java)
-            intent.putExtra("offer",offer)
-            itemView.context.startActivity(intent)
+        fun setCupon(mainViewModel: MainViewModel, position: Int) {
+            binding?.setVariable(BR.model, mainViewModel)
+            binding?.setVariable(BR.position, position)
 
         }
 

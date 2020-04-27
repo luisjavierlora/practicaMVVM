@@ -2,39 +2,37 @@ package com.example.practicamvp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProvider
 import com.example.practicamvp.R
-import com.example.practicamvp.model.Offer
+import com.example.practicamvp.databinding.ActivityDetailBinding
+import com.example.practicamvp.model.obj.Offer
+import com.example.practicamvp.viewmodel.DetailViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_detail.*
-import kotlinx.android.synthetic.main.item.*
-import kotlinx.android.synthetic.main.item.view.*
 
 class DetailActivity : AppCompatActivity() {
+
+    private var detailViewModel: DetailViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detail)
 
-        val offer = intent?.getSerializableExtra("offer") as Offer
-
-        ShowCupon(offer)
+        setupBinding(savedInstanceState)
 
     }
 
+    fun setupBinding(savedInstanceState: Bundle?) {
 
-    fun ShowCupon(offer: Offer){
+        var activityDetalleBinding: ActivityDetailBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_detail)
 
-        tv_offertextd.text = offer.offerText
-        tv_stored.text =offer.store
-        tv_category.text =offer.categories
-        tv_description.text=offer.description
-        if(offer.imageUrl.isNotEmpty())
-            Picasso.get().load(offer.imageUrl).into(iv_logod)
-        else
-            Picasso.get().load(R.mipmap.logo).into(iv_logod)
+        detailViewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
 
-        tv_code.text =offer.code
-        tv_end.text=offer.endDate
-        tv_url.text=offer.url
+        activityDetalleBinding.model = detailViewModel
+        activityDetalleBinding.lifecycleOwner = this
+
+        detailViewModel?.setDetalleCupon(intent?.getSerializableExtra("cupon") as Offer)
     }
 }

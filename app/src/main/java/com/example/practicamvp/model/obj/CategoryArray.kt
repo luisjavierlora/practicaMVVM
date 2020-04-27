@@ -1,4 +1,4 @@
-package com.example.practicamvp.model
+package com.example.practicamvp.model.obj
 
 
 import com.google.gson.annotations.SerializedName

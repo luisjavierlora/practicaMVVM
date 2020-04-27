@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">practicaMVP</string>
+    <string name="app_name">practicaMVVM</string>
     <string name="api_key">78a5445cf99c588ceeabf690661cc374</string>
     <string name="get">Coupons!!</string>
     <string name="offer">Offer:</string>
-    <string name="code">Cupon Code:</string>
+    <string name="code">Code:</string>
     <string name="Store">Store:</string>
     <string name="Category">Category:</string>
     <string name="Description">Description</string>

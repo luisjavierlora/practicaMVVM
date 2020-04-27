@@ -1,7 +1,6 @@
 package com.example.practicamvp.ui
 
-import com.example.practicamvp.model.Cupon
-import com.example.practicamvp.model.Offer
+import com.example.practicamvp.model.obj.Offer
 
 interface CuponView {
 
